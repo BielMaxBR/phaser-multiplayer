@@ -16,7 +16,10 @@ module.exports = async (io,socket) => {
   })
   
   socket.on('disconnect',()=>{
-    io.emit('remove',socket.player.id);
+    if (socket.player) {
+      console.log(players)
+      io.emit('remove',socket.player.id);
+    }
   });
 
   async function getAllPlayers(){

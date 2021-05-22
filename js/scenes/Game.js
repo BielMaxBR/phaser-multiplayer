@@ -1,5 +1,6 @@
 import client from '../client.js'
 import eventController from '../eventController.js'
+import inputManager from '../inputManager.js'
 
 export default class Game extends Phaser.Scene {
   constructor() {
@@ -23,6 +24,7 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
+    this.input.keyboard.on('keydown',(event)=>{inputManager.keydown(this,client,event)})
     client.emit('newPlayer')
   }
 
