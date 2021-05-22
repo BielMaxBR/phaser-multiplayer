@@ -2,8 +2,8 @@ import Game from '/js/scenes/Game.js'
 
 const game = new Phaser.Game({
   type: Phaser.WEBGL,
-  width: 16*32,
-  height: 600,
+  width: 600,
+  height: 400,
   canvas: document.getElementById('game'),
   scene: [Game]
 })

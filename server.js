@@ -16,4 +16,4 @@ server.listen(8081,function(){ // Listens to port 8081
   console.log('Listening on '+server.address().port);
 });
 
-io.on('connection',socketController)
+io.on('connection',(socket)=>{socketController(io,socket)})
