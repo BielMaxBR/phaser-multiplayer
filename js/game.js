@@ -7,3 +7,5 @@ const game = new Phaser.Game({
   canvas: document.getElementById('game'),
   scene: [Game]
 })
+
+export default game
