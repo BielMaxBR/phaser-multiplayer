@@ -4,13 +4,17 @@ export default function(game, event, args) {
   switch(event) {
     case "newPlayer":
       console.log('Nrodado ',data)
-      game.addNewPlayer({ id:data.id, x:data.x, y:data.y });
+      game.addNewPlayer(data);
+      break;
+
+    case "updatePos":
+      game.updatePlayer(args[0], args[1])
       break;
 
       case "allPlayers":
       console.log('Arodado ', data)
       for(let player of Object.values(data)){
-        game.addNewPlayer({ id:player.id, x:player.x, y:player.y });
+        if (player.id != game.player.id) game.addNewPlayer(player);
       }
       break;
 

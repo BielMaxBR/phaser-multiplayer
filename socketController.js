@@ -11,6 +11,11 @@ module.exports = async (io,socket) => {
     socket.broadcast.emit('newPlayer',socket.player);
   })
   
+  socket.on('updatePos', (pos)=>{
+    socket.player.pos = pos
+    socket.emit('updatePos', socket.player.id, pos);
+  })
+
   socket.on('disconnect',()=>{
     if (socket.player) {
       console.log(players)
