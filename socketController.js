@@ -2,13 +2,9 @@ let lastPlayerId = 0
 module.exports = async (io,socket) => {
   console.log('entrou')
 
-  socket.on('newPlayer',async ()=>{
+  socket.on('newPlayer',async (player)=>{
     console.log('novo player')
-    socket.player = {
-      id: lastPlayerId++,
-      x: 300,
-      y: 200
-    }
+    socket.player = player
     const players = await getAllPlayers()
     console.log(players)
     socket.emit('allPlayers', players);

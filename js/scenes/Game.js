@@ -1,6 +1,7 @@
 import client from '../client.js'
 import eventController from '../eventController.js'
 import inputManager from '../inputManager.js'
+import Player from '../classes/Player.js'
 
 export default class Game extends Phaser.Scene {
   constructor() {
@@ -24,12 +25,13 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
+    this.player = new Player(this, window.performance.now(), {x:300,y:200})
     this.input.keyboard.on('keydown',(event)=>{inputManager.keydown(this,client,event)})
-    client.emit('newPlayer')
+    client.emit('newPlayer', this.player)
   }
 
   addNewPlayer({id,x,y}) {
-    this.playerMap[id] = this.add.sprite(x,y,'sprite');
+    this.playerMap[id] = new Player(this,id,{x,y})
   }
 
   removePlayer(id) {
