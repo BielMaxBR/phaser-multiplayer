@@ -5,13 +5,6 @@ export class GameRoom extends Room<GameState> {
 
   onCreate (options: any) {
     this.setState(new GameState());
-
-    this.onMessage("type", (client, message) => {
-      //
-      // handle "type" message
-      //
-    });
-
   }
 
   onJoin (client: Client, options: any) {
