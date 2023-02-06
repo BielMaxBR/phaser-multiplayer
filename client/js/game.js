@@ -1,11 +1,14 @@
-import Game from '/js/scenes/Game.js'
+import Game from "/js/scenes/Game.js";
 
 const game = new Phaser.Game({
-  type: Phaser.CANVAS,
-  width: 600,
-  height: 400,
-  canvas: document.getElementById('game'),
-  scene: [Game]
-})
+    type: Phaser.CANVAS,
+    width: 600,
+    height: 400,
+    canvas: document.getElementById("game"),
+    scene: [Game],
+    physics: {
+        default: "arcade",
+    },
+});
 
-export default game
+export default game;

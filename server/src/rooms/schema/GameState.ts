@@ -1,7 +1,9 @@
-import { Schema, Context, type } from "@colyseus/schema";
+import { Schema, type, MapSchema } from "@colyseus/schema";
+import { Player } from "./PlayerSchema";
 
 export class GameState extends Schema {
+    @type("number") mapWidth: number;
+    @type("number") mapHeight: number;
 
-  @type("string") mySynchronizedProperty: string = "Hello world";
-
+    @type({ map: Player }) players = new MapSchema<Player>();
 }

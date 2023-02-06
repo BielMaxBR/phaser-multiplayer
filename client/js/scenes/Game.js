@@ -1,10 +1,22 @@
 export default class Game extends Phaser.Scene {
+    client = Colyseus.Client;
+    room = Colyseus.Room;
     constructor() {
         super("game");
     }
 
-    init() {
-        this.connect();
+    preload() {
+        this.cameras.main.setBackgroundColor(0x000000);
+
+        this.load.image("ovni", "assets/ovni.png");
+    }
+
+    async create() {
+        await this.connect();
+
+        this.room.state.players.onAdd = (player, sessionId) => {
+            const entity = this.physics.add.image(player.x, player.y, "ovni");
+        };
     }
 
     async connect() {
@@ -13,12 +25,12 @@ export default class Game extends Phaser.Scene {
             .setStyle({ color: "#ff0000" })
             .setPadding(4);
 
-        const client = new Colyseus.Client(
+        this.client = new Colyseus.Client(
             "wss://2567-bielmaxbr-phasermultipl-9mjk4ralmzn.ws-us85.gitpod.io"
         );
 
         try {
-            const room = await client.joinOrCreate("game", {});
+            this.room = await this.client.joinOrCreate("game", {});
 
             connectionStatusText.destroy();
         } catch (e) {
