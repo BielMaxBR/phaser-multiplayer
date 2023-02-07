@@ -9,6 +9,7 @@ const game = new Phaser.Game({
     physics: {
         default: "arcade",
     },
+    pixelArt: true,
 });
-
+window.game = game;
 export default game;
