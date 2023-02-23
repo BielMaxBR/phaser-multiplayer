@@ -13,18 +13,6 @@
         <div id="root"></div>
     </body>
     <script>
-        {
-            var WS = window.WebSocket;
-            function DevWebSocket(s) {
-                if (s === "ws://localhost:3000/sockjs-node") {
-                    console.info("[DEV NOTICE] Live Reload Has Been Disabled");
-                    return {};
-                } else {
-                    // Pass through other usage of sockets
-                    return {};
-                }
-            }
-            window.WebSocket = DevWebSocket;
-        }
+        window.WebSocket = {}; // desativando hot-reload
     </script>
 </html>
