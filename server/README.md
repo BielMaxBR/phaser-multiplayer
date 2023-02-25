@@ -1,2 +1,2 @@
-# babel-typescript-example
- Minimum configuration for Typescript and Babel to work
+# servidor do jogo
+ não sei oque devo escrever aqui
