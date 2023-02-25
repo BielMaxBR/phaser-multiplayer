@@ -10,3 +10,5 @@ io.onConnection((channel: ServerChannel) => {
 
 io.listen();
 export default io;
+
+console.log("A")
