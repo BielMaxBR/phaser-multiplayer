@@ -5,7 +5,7 @@ export default class ClientManager {
     constructor(url: string) {
         this.channel = geckos({
             url,
-            port: null,
+            port: 9208,
             iceServers: [
                 // { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
                 // { urls: "stun:stun.l.google.com:19302" },
@@ -14,7 +14,7 @@ export default class ClientManager {
             ],
         });
         this.channel.on("connection", (_) => {
-            console.log("OK");
+            console.log("OK, bro");
         });
         this.channel.onConnect((err) => {
             if (err) {
@@ -22,7 +22,7 @@ export default class ClientManager {
                 return;
             }
             console.log("OK");
-            this.channel.emit("chat message", "opa");
+            this.channel.emit("message", "opa");
         });
     }
 }

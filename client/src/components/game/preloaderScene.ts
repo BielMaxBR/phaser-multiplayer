@@ -13,7 +13,7 @@ export class PreloaderScene extends Phaser.Scene {
       }
     create() {
         setTimeout((_: any) => {
-            this.game.client = new ClientManager("https://9208-bielmaxbr-phasermultipl-9mjk4ralmzn.ws-us88.gitpod.io")//(process.env.REACT_APP_SERVER_URL)
+            this.game.client = new ClientManager(process.env.REACT_APP_SERVER_URL)
         },1000)
     }
 }
