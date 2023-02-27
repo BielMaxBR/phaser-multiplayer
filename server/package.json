@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
-  "module": "lib/index.js",
+  "type": "module",
   "scripts": {
     "build:compile": "npx babel src --extensions .ts --out-dir lib --source-maps",
     "build:types": "tsc",
@@ -11,7 +11,7 @@
     "watch:compile": "npx babel src --extensions .ts --out-dir lib --source-maps --watch",
     "watch:types": "tsc --watch",
     "watch": "concurrently npm:watch:*",
-    "start": "node lib/index.js"
+    "start": "nodemon lib/index.js"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "concurrently": "^6.2.1"
   },
   "dependencies": {
-    "@geckos.io/server": "^2.3.0"
+    "@geckos.io/server": "^2.3.0",
+    "nodemon": "^2.0.20"
   }
 }
