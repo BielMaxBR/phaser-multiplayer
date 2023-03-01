@@ -4,11 +4,13 @@ import geckos, {
     GeckosServer,
     ServerChannel,
 } from "@geckos.io/server";
+import Game from "./phaser/game.js";
+
+new Game()
 
 const config = {
     cors: { allowAuthorization: true, origin: "*" },
     iceServers: [
-        { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
         { urls: "stun:stun.l.google.com:19302" },
         { urls: "stun:stun2.l.google.com:19302" },
         { urls: "stun:stun4.l.google.com:19302" },
