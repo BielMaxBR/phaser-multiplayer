@@ -1,15 +1,31 @@
-/**
- * IMPORTANT: 
- * ---------
- * Do not manually edit this file if you'd like to use Colyseus Arena
- * 
- * If you're self-hosting (without Arena), you can manually instantiate a
- * Colyseus Server as documented here: 👉 https://docs.colyseus.io/server/api/#constructor-options 
- */
-import { listen } from "@colyseus/arena";
+import geckos, {
+    ChannelId,
+    Data,
+    GeckosServer,
+    ServerChannel,
+} from "@geckos.io/server";
+import Game from "./phaser/game.js";
 
-// Import arena config
-import arenaConfig from "./arena.config";
+new Game()
 
-// Create and listen on 2567 (or PORT environment variable.)
-listen(arenaConfig);
+const config = {
+    cors: { allowAuthorization: true, origin: "*" },
+    iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:stun2.l.google.com:19302" },
+        { urls: "stun:stun4.l.google.com:19302" },
+    ],
+};
+const io: GeckosServer = geckos(config);
+
+io.onConnection((channel: ServerChannel) => {
+    console.log("ligado");
+    channel.on("message", (data: Data, senderId: ChannelId) => {
+        console.log(data);
+    });
+});
+
+io.listen(9208);
+export default io;
+
+console.log("Avara quedava");
