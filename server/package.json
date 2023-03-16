@@ -24,10 +24,11 @@
     "concurrently": "^6.2.1"
   },
   "dependencies": {
+    "@geckolyseus/server": "file:../../geckolyseus/packages/server",
     "@geckos.io/phaser-on-nodejs": "^1.2.8",
     "@geckos.io/server": "^2.3.0",
-    "nodemon": "^2.0.20",
     "node": "16.15.1",
+    "nodemon": "^2.0.20",
     "phaser": "^3.55.2"
   }
 }
