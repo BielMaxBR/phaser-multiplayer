@@ -1,14 +1,9 @@
-import geckos, {
-    ChannelId,
-    Data,
-    GeckosServer,
-    ServerChannel,
-} from "@geckos.io/server";
-import Game from "./phaser/game.js";
-import { Server, ServerOptions } from "@geckolyseus/server";
-new Game();
+import * as geckolyseus from "@geckolyseus/server";
 
-const config: ServerOptions = {
+import Game from "./phaser/game.js";
+export const game: Game = new Game();
+
+const config: geckolyseus.ServerOptions = {
     colyseusOptions: { greet: false },
     geckosOptions: {
         cors: { allowAuthorization: true, origin: "*" },
@@ -20,7 +15,7 @@ const config: ServerOptions = {
     },
 };
 
-const server = new Server(config);
+export const server = new geckolyseus.Server(config);
 server.listenAll(4000, 4100);
 
-console.log("Avara quedava");
+console.log(`Colyseus signaling server is running on port 4000`);
