@@ -21,13 +21,11 @@
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-typescript": "^7.15.0",
-    "@geckolyseus/server": "file:../../geckolyseus/packages/server",
     "concurrently": "^6.2.1"
   },
   "dependencies": {
     "@colyseus/schema": "^1.0.45",
     "@geckos.io/phaser-on-nodejs": "^1.2.8",
-    "@geckos.io/server": "^2.3.0",
     "colyseus": "^0.14.24",
     "node": "16.15.1",
     "nodemon": "^2.0.20",
