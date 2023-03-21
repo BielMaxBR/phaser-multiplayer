@@ -2,33 +2,35 @@
   "name": "phaser-multiplayer-server",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index.js",
-  "type": "module",
+  "input": "./src/index.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "typings": "./lib/index.d.ts",
   "scripts": {
-    "build:compile": "npx babel src --extensions .ts --out-dir lib --source-maps",
+    "build:compile": "tsc --build tsconfig.json",
     "build:types": "tsc",
     "build": "concurrently npm:build:*",
-    "watch:compile": "npx babel src --extensions .ts --out-dir lib --source-maps --watch",
+    "watch:compile": "tsc --build tsconfig.json --watch",
     "watch:types": "tsc --watch",
     "watch": "concurrently npm:watch:*",
-    "start": "nodemon lib/index.js"
+    "start": "node lib/index.js",
+    "test": "nodemon lib/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/cli": "^7.15.4",
-    "@babel/core": "^7.15.5",
-    "@babel/preset-env": "^7.15.6",
-    "@babel/preset-typescript": "^7.15.0",
     "concurrently": "^6.2.1"
   },
   "dependencies": {
     "@colyseus/schema": "^1.0.45",
     "@geckos.io/phaser-on-nodejs": "^1.2.8",
     "colyseus": "^0.14.24",
-    "node": "16.15.1",
     "nodemon": "^2.0.20",
     "phaser": "^3.55.2"
+  },
+  "nodemonConfig": {
+    "ignore": ["**/lib/**", "**/node_modules/**"],
+    "delay": 500
   }
 }
