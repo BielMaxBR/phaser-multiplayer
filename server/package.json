@@ -13,24 +13,32 @@
     "watch:compile": "tsc --build tsconfig.json --watch",
     "watch:types": "tsc --watch",
     "watch": "concurrently npm:watch:*",
-    "start": "node lib/index.js",
-    "test": "nodemon lib/index.js"
+    "test": "nodemon lib/index.js",
+    "start": "node lib/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
     "concurrently": "^6.2.1"
   },
   "dependencies": {
     "@colyseus/schema": "^1.0.45",
+    "@colyseus/ws-transport": "^0.14.21",
     "@geckos.io/phaser-on-nodejs": "^1.2.8",
     "colyseus": "^0.14.24",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
     "nodemon": "^2.0.20",
     "phaser": "^3.55.2"
   },
   "nodemonConfig": {
-    "ignore": ["**/lib/**", "**/node_modules/**"],
+    "ignore": [
+      "**/lib/**",
+      "**/node_modules/**"
+    ],
     "delay": 500
   }
 }
