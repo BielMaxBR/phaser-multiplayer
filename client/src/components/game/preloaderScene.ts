@@ -8,6 +8,7 @@ export class PreloaderScene extends Phaser.Scene {
     }
     create() {
         this.plugins.start("client")
+        console.log("cena pronta")
         // this.sys.client.onReady(err => {
         //     if (err) return
         //     this.scene.start(GAME_SCENE)

@@ -1,7 +1,7 @@
 import "@geckos.io/phaser-on-nodejs";
 import Phaser from "phaser";
 
-export default class Game extends Phaser.Game {
+class Game extends Phaser.Game {
     constructor() {
         super({
             type: Phaser.HEADLESS,
@@ -13,3 +13,5 @@ export default class Game extends Phaser.Game {
         });
     }
 }
+
+export const game = new Game()

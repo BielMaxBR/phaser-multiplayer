@@ -25,6 +25,8 @@
     "concurrently": "^6.2.1"
   },
   "dependencies": {
+    "@colyseus/arena": "^0.14.24",
+    "@colyseus/monitor": "^0.14.22",
     "@colyseus/schema": "^1.0.45",
     "@colyseus/ws-transport": "^0.14.21",
     "@geckos.io/phaser-on-nodejs": "^1.2.8",

@@ -1,6 +1,6 @@
 import {Client, Room} from "colyseus"
 import { LobbyState } from "./states/LobbyState.js";
-import { game } from "../index.js";
+import { game } from "../phaser/game.js";
 import { BaseScene } from "../phaser/BaseScene.js";
 
 

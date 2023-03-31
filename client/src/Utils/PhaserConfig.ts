@@ -25,7 +25,7 @@ export function getPhaserConfig(): GameOptions {
                 {
                     sceneKey: "client",
                     key: "client",
-                    plugin: ClientManager,
+                    plugin: ClientManager
                 },
             ],
         },
