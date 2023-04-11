@@ -15,5 +15,6 @@
       "outDir": "lib",
       "rootDir": "src",
       "isolatedModules": true
-  }
+  },
+  "include": ["src"]
 }

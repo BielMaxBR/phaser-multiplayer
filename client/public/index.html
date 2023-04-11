@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+        <script src="https://unpkg.com/colyseus.js@^0.14.0/dist/colyseus.js"></script>
         <title>multiplayer game</title>
     </head>
     <body>
@@ -13,12 +14,12 @@
         <div id="root"></div>
     </body>
     <script>
-        {
-            var WS = window.WebSocket;
-            function DevWebSocket(s) {
-                return {};
-            }
-            window.WebSocket = DevWebSocket;
+        var WS = window.WebSocket;
+        function DevWebSocket(s) {
+            return {};
         }
+        window.WebSocket = DevWebSocket;
+        window.client = new Colyseus.Client("wss://2567-bielmaxbr-phasermultipl-9mjk4ralmzn.ws-us93.gitpod.io")
+        window.client.joinOrCreate("lobby")
     </script>
 </html>
