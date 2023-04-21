@@ -1,25 +1,20 @@
-import ClientManager from "../components/game/plugins/client/ClientManager";
 import { Types } from "phaser";
+import ClientManager from "../components/game/plugins/client/ClientManager";
+import { PreloaderScene } from "../components/game/preloaderScene";
+import { GameScene } from "../components/game/scenes/gameScene";
 
-export interface GameOptions {
-    scale: object;
-    type: number;
-    width: number;
-    height: number;
-    parent: string;
-    plugins: Types.Core.PluginObject;
-}
-
-export function getPhaserConfig(): GameOptions {
+export function getPhaserConfig(): Types.Core.GameConfig {
     return {
         scale: {
             mode: Phaser.Scale.WIDTH_CONTROLS_HEIGHT,
             autoCenter: Phaser.Scale.CENTER_VERTICALLY,
         },
         type: Phaser.CANVAS,
-        width: 1280,
-        height: 720,
+        width: 640,
+        height: 360,
         parent: "game",
+        pixelArt: true,
+        scene: [PreloaderScene, GameScene],
         plugins: {
             scene: [
                 {

@@ -17,9 +17,9 @@ export default class ClientManager extends Plugins.ScenePlugin {
         );
     }
     async boot() {
-        console.log("plugin pronto")
-        this.room = await this.client.joinOrCreate("lobby");
-        console.log("entrou na room: ", "this.room.name");
+        // console.log("plugin pronto")
+        // this.room = await this.client.joinOrCreate("lobby");
+        // console.log("entrou na room: ", "this.room.name");
     }
 
     //     this.channel = geckos({
