@@ -4,9 +4,9 @@ import Tile from "./Tile";
 export default class GameMap extends Tilemaps.Tilemap {
     constructor(scene: Scene) {
         const mapData: Tilemaps.MapData = new Tilemaps.MapData({
-            orientation: Tilemaps.HEXAGONAL,
-            width: 20,
-            height: 20,
+            orientation: "hexagonal",
+            width: 100,
+            height: 100,
             tileHeight: 64,
             tileWidth: 64,
             format: Tilemaps.Formats.TILED_JSON,
@@ -15,10 +15,13 @@ export default class GameMap extends Tilemaps.Tilemap {
                     name: "layer0",
                     width: 20,
                     height: 20,
-                    data: [[0]],
+                    baseTileHeight: 64,
+                    baseTileWidth: 64,
+                    tileHeight: 64,
+                    tileWidth: 64
                 }),
             ],
-            tilesets: [new Tilemaps.Tileset("tileset", 1, 64, 64)],
+            tilesets: [new Tilemaps.Tileset("tileset", 0, 64, 64)],
         });
 
         mapData.layers[0].hexSideLength = 34;
@@ -28,10 +31,10 @@ export default class GameMap extends Tilemaps.Tilemap {
 
         this.createLayer("layer0", this.addTilesetImage("tileset", "tiles", 64, 64), 0, 0);
 
-        for (let i = 0; i < 10; i++) {
-            for (let j = 0; j < 10; j++) {
-                const tile = new Tile(this.scene, this.layer, 1, i, j);
-                this.setTile(tile, i, j);
+        for (let x = 0; x < this.layer.width; x++) {
+            for (let y = 0; y < this.layer.height; y++) {
+                const tile = new Tile(this.scene, this.layer, 0, x, y);
+                this.setTile(tile, x, y);
             }
         }
     }
