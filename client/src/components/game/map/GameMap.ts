@@ -1,49 +1,103 @@
-import { Scene, Tilemaps } from "phaser";
+import { GameObjects, Math as PhaserMath, Scene, Tilemaps } from "phaser";
 import Tile from "./Tile";
 
-export default class GameMap extends Tilemaps.Tilemap {
+export default class GameMap extends GameObjects.Container {
+    grid: Tile[][] = [];
+    private layer = new Tilemaps.LayerData({
+        baseTileHeight: 64,
+        baseTileWidth: 64,
+    });
     constructor(scene: Scene) {
-        const mapData: Tilemaps.MapData = new Tilemaps.MapData({
-            orientation: "hexagonal",
-            width: 100,
-            height: 100,
-            tileHeight: 64,
-            tileWidth: 64,
-            format: Tilemaps.Formats.TILED_JSON,
-            layers: [
-                new Tilemaps.LayerData({
-                    name: "layer0",
-                    width: 20,
-                    height: 20,
-                    baseTileHeight: 64,
-                    baseTileWidth: 64,
-                    tileHeight: 64,
-                    tileWidth: 64
-                }),
-            ],
-            tilesets: [new Tilemaps.Tileset("tileset", 0, 64, 64)],
-        });
+        super(scene);
+        scene.add.existing(this);
 
-        mapData.layers[0].hexSideLength = 34;
-        mapData.layers[0].orientation = Tilemaps.HEXAGONAL;
-        mapData.layers[0].staggerAxis = "y"
-        super(scene, mapData);
-
-        this.createLayer("layer0", this.addTilesetImage("tileset", "tiles", 64, 64), 0, 0);
-
-        for (let x = 0; x < this.layer.width; x++) {
-            for (let y = 0; y < this.layer.height; y++) {
-                const tile = new Tile(this.scene, this.layer, 0, x, y);
-                this.setTile(tile, x, y);
+        // testes
+        for (var x = 0; x < 10; x++) {
+            for (var y = 0; y < 10; y++) {
+                const pos = this.tileToWorld(x, y);
+                this.addTile(new Tile(scene, pos.x, pos.y), x, y);
             }
         }
     }
 
-    setTile(tile: Tile, x: number, y: number) {
-        const data = this.layer.data;
+    addTile(tile: Tile, x: number, y: number) {
+        if (typeof this.grid[x] == "undefined") this.grid[x] = [];
+        this.grid[x][y] = tile;
+        this.add(tile);
+    }
 
-        if (data[y] === undefined) data[y] = [];
+    generateTile(x: number, y: number) {
+        // const newTile: Tile = new Tile(this.scene)
+    }
 
-        data[y][x] = tile;
+    // função copiada do código fonte do phaser
+    tileToWorld(tileX: number, tileY: number) {
+        let point = new PhaserMath.Vector2();
+
+        var tileWidth = this.layer.baseTileWidth;
+        var tileHeight = this.layer.baseTileHeight;
+
+        var worldX = 0;
+        var worldY = 0;
+
+        //  origin
+        var tileWidthHalf = tileWidth / 2;
+        var tileHeightHalf = tileHeight / 2;
+
+        var x = worldX + tileWidth * tileX + tileWidth;
+        var y = worldY + 1.5 * tileY * tileHeightHalf + tileHeightHalf;
+
+        if (tileY % 2 === 0) {
+            x -= tileWidthHalf;
+        }
+
+        return point.set(x, y);
+    }
+
+    // função copiada do código fonte do phaser
+    worldToTile(worldX: number, worldY: number) {
+        let point = new PhaserMath.Vector2();
+
+        var tileWidth = this.layer.baseTileWidth;
+        var tileHeight = this.layer.baseTileHeight;
+        //  Hard-coded orientation values for Pointy-Top Hexagons only
+        var b0 = 0.5773502691896257; // Math.sqrt(3) / 3
+        var b1 = -0.3333333333333333; // -1 / 3
+        var b2 = 0;
+        var b3 = 0.6666666666666666; // 2 / 3
+
+        //  origin
+        var tileWidthHalf = tileWidth / 2;
+        var tileHeightHalf = tileHeight / 2;
+
+        //  x = b0 * tileWidth
+        //  y = tileHeightHalf
+        var px = (worldX - tileWidthHalf) / (b0 * tileWidth);
+        var py = (worldY - tileHeightHalf) / tileHeightHalf;
+
+        var q = b0 * px + b1 * py;
+        var r = b2 * px + b3 * py;
+
+        var s = -q - r;
+
+        var qi = Math.round(q);
+        var ri = Math.round(r);
+        var si = Math.round(s);
+
+        var qDiff = Math.abs(qi - q);
+        var rDiff = Math.abs(ri - r);
+        var sDiff = Math.abs(si - s);
+
+        if (qDiff > rDiff && qDiff > sDiff) {
+            qi = -ri - si;
+        } else if (rDiff > sDiff) {
+            ri = -qi - si;
+        }
+
+        var y = ri;
+
+        var x = y % 2 === 0 ? ri / 2 + qi : ri / 2 + qi - 0.5;
+
+        return point.set(x, y);
     }
 }

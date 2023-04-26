@@ -1,15 +1,11 @@
-import { Scene, Tilemaps } from "phaser";
+import { GameObjects, Scene } from "phaser";
 
-export default class Tile extends Tilemaps.Tile {
-    scene: Scene;
-    constructor(
-        scene: Scene,
-        layer: Tilemaps.LayerData,
-        index: number,
-        x: number,
-        y: number
-    ) {
-        super(layer, index, x, y, 64, 64, 64, 64);
-        this.scene = scene;
+export default class Tile extends GameObjects.Sprite {
+    constructor(scene: Scene, x: number, y: number) {
+        super(scene, x, y, "tiles");
+    }
+
+    protected preUpdate(time: number, delta: number): void {
+        // console.log("a")
     }
 }
