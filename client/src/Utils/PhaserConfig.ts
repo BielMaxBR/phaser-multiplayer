@@ -24,5 +24,11 @@ export function getPhaserConfig(): Types.Core.GameConfig {
                 },
             ],
         },
+        physics: {
+            default: 'arcade',
+            arcade: {
+                debug: false
+            }
+        }
     };
 }

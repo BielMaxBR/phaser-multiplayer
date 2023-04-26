@@ -1,10 +1,9 @@
-import { Tilemaps } from "phaser";
 import { GAME_SCENE } from "../../../Utils/constants";
 import GameMap from "../map/GameMap";
 
 export class GameScene extends Phaser.Scene {
-    map: Tilemaps.Tilemap;
-    controls;
+    map: GameMap;
+    controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     constructor() {
         super({
             key: GAME_SCENE,
@@ -16,6 +15,7 @@ export class GameScene extends Phaser.Scene {
 
         // controles de teste pra visão (temporários)
         const cursors = this.input.keyboard.createCursorKeys();
+
         const controlConfig = {
             camera: this.cameras.main,
             left: cursors.left,
@@ -24,20 +24,21 @@ export class GameScene extends Phaser.Scene {
             down: cursors.down,
             acceleration: 0.02,
             drag: 0.0005,
-            maxSpeed: 0.7
+            maxSpeed: 0.7,
         };
-        this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-        
+        this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(
+            controlConfig
+        );
     }
     update(_time: number, delta: number): void {
         // controle de teste temporário
         this.controls.update(delta);
-        
-        let worldPoint = this.input.activePointer
+
+        let worldPoint = this.input.activePointer;
 
         if (worldPoint.isDown && worldPoint.getDuration() < 1) {
-            const tile = this.map.getTileAtWorldXY(worldPoint.x,worldPoint.y)
-            console.log(tile?.x,tile?.y)
+            const vect = this.map.worldToTile(worldPoint.x, worldPoint.y);
+            console.log(vect?.x, vect?.y);
         }
     }
 }
