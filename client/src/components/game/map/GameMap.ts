@@ -1,23 +1,49 @@
-import { GameObjects, Math as PhaserMath, Scene, Tilemaps } from "phaser";
+import { Cameras, GameObjects, Math as PhaserMath, Scene, Types } from "phaser";
 import Tile from "./Tile";
+import { div } from "../../../Utils/maths";
+import { HEXSIZE, MATHS } from "../../../Utils/constants";
+import Chunk from "./Chunk";
 
 export default class GameMap extends GameObjects.Container {
     grid: Tile[][] = [];
-    private layer = new Tilemaps.LayerData({
-        baseTileHeight: 64,
-        baseTileWidth: 64,
-    });
+    chunkRadius = 2;
+    area = 3 * (this.chunkRadius ** 2 + this.chunkRadius) + 1;
+    shift = 3 * this.chunkRadius + 2;
+    chunks: Chunk[] = [];
+    currentChunk: Chunk;
+    viewDistanceInChunks: number = 0;
     constructor(scene: Scene) {
         super(scene);
         scene.add.existing(this);
 
         // testes
-        for (var x = 0; x < 10; x++) {
-            for (var y = 0; y < 10; y++) {
-                const pos = this.tileToWorld(x, y);
-                this.addTile(new Tile(scene, pos.x, pos.y), x, y);
+        for (const { x, y } of this.get_area(
+            { x: 0, y: 0 },
+            this.viewDistanceInChunks
+        )) {
+            const pos = this.center_of({ x, y });
+            console.log(pos);
+            const realPos = this.tileToWorld(pos.x, pos.y);
+
+            for (const aroundPos of this.get_area(
+                { x: pos.x, y: pos.y },
+                this.chunkRadius
+            )) {
+                const aroundReal = this.tileToWorld(aroundPos.x, aroundPos.y);
+                // console.log(this.worldToTile(aroundReal).subtract(aroundPos));
+                this.addTile(
+                    new Tile(scene, aroundReal.x, aroundReal.y),
+                    aroundPos.x,
+                    aroundPos.y
+                );
             }
+
+            this.addTile(new Tile(scene, realPos.x, realPos.y), pos.x, pos.y);
         }
+    }
+
+    getCurrentChunk(vect: Types.Math.Vector2Like) {
+        return this.smallToBig(this.worldToTile(vect));
     }
 
     addTile(tile: Tile, x: number, y: number) {
@@ -34,70 +60,78 @@ export default class GameMap extends GameObjects.Container {
     tileToWorld(tileX: number, tileY: number) {
         let point = new PhaserMath.Vector2();
 
-        var tileWidth = this.layer.baseTileWidth;
-        var tileHeight = this.layer.baseTileHeight;
-
-        var worldX = 0;
-        var worldY = 0;
-
-        //  origin
-        var tileWidthHalf = tileWidth / 2;
-        var tileHeightHalf = tileHeight / 2;
-
-        var x = worldX + tileWidth * tileX + tileWidth;
-        var y = worldY + 1.5 * tileY * tileHeightHalf + tileHeightHalf;
-
-        if (tileY % 2 === 0) {
-            x -= tileWidthHalf;
-        }
+        var x = Math.round(
+            MATHS.HEXWITH * (MATHS.SQRT * tileX + MATHS.SQRT32 * tileY)
+        );
+        var y = MATHS.HEXHEIGHT * (1.5 * tileY);
 
         return point.set(x, y);
     }
 
-    // função copiada do código fonte do phaser
-    worldToTile(worldX: number, worldY: number) {
+    worldToTile(vect: Types.Math.Vector2Like) {
+        const worldX: number = vect.x;
+        const worldY: number = vect.y;
         let point = new PhaserMath.Vector2();
 
-        var tileWidth = this.layer.baseTileWidth;
-        var tileHeight = this.layer.baseTileHeight;
-        //  Hard-coded orientation values for Pointy-Top Hexagons only
+        var tileWidth = MATHS.HEXWITH;
+        var tileHeight = MATHS.HEXHEIGHT;
+
         var b0 = 0.5773502691896257; // Math.sqrt(3) / 3
         var b1 = -0.3333333333333333; // -1 / 3
-        var b2 = 0;
-        var b3 = 0.6666666666666666; // 2 / 3
+        var b2 = 0.6666666666666666; // 2 / 3
 
-        //  origin
-        var tileWidthHalf = tileWidth / 2;
-        var tileHeightHalf = tileHeight / 2;
-
-        //  x = b0 * tileWidth
-        //  y = tileHeightHalf
-        var px = (worldX - tileWidthHalf) / (b0 * tileWidth);
-        var py = (worldY - tileHeightHalf) / tileHeightHalf;
-
-        var q = b0 * px + b1 * py;
-        var r = b2 * px + b3 * py;
-
+        var q = (b0 * worldX + b1 * worldY) / tileWidth;
+        var r = (b2 * worldY) / tileHeight;
         var s = -q - r;
 
-        var qi = Math.round(q);
-        var ri = Math.round(r);
-        var si = Math.round(s);
+        var x = Math.round(q);
+        var y = Math.round(r);
+        var z = Math.round(s);
 
-        var qDiff = Math.abs(qi - q);
-        var rDiff = Math.abs(ri - r);
-        var sDiff = Math.abs(si - s);
+        var q_diff = Math.abs(x - q);
+        var r_diff = Math.abs(y - r);
+        var s_diff = Math.abs(z - s);
 
-        if (qDiff > rDiff && qDiff > sDiff) {
-            qi = -ri - si;
-        } else if (rDiff > sDiff) {
-            ri = -qi - si;
+        if (q_diff > r_diff && q_diff > s_diff) {
+            x = -y - z;
+        } else if (r_diff > s_diff) {
+            y = -x - z;
         }
-
-        var y = ri;
-
-        var x = y % 2 === 0 ? ri / 2 + qi : ri / 2 + qi - 0.5;
-
         return point.set(x, y);
+    }
+
+    smallToBig(vect: Types.Math.Vector2Like) {
+        const z = -(vect.x + vect.y);
+
+        const xh = div(vect.y + this.shift * vect.x, this.area),
+            yh = div(z + this.shift * vect.y, this.area),
+            zh = div(vect.x + this.shift * z, this.area);
+        const i = div(1 + xh - yh, 3),
+            j = div(1 + yh - zh, 3),
+            k = div(1 + zh - xh, 3);
+        return { x: i, y: j, z: k };
+    }
+
+    center_of(vect: Types.Math.Vector2Like) {
+        const z = -(vect.x + vect.y);
+
+        return new PhaserMath.Vector2(
+            (this.chunkRadius + 1) * vect.x - this.chunkRadius * z,
+            (this.chunkRadius + 1) * vect.y - this.chunkRadius * vect.x
+        );
+    }
+
+    get_area(center: Types.Math.Vector2Like, range: number) {
+        var results = [];
+        for (var x = -range; x <= range; x++) {
+            for (
+                var y = Math.max(-range, -x - range);
+                y <= Math.min(+range, -x + range);
+                y++
+            ) {
+                results.push({ x: center.x + x, y: center.y + y });
+            }
+        }
+        return results;
     }
 }

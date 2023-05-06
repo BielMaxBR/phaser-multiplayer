@@ -1,4 +1,4 @@
-import { GAME_SCENE } from "../../../Utils/constants";
+import { GAME_SCENE, HEXSIZE } from "../../../Utils/constants";
 import GameMap from "../map/GameMap";
 
 export class GameScene extends Phaser.Scene {
@@ -15,7 +15,7 @@ export class GameScene extends Phaser.Scene {
 
         // controles de teste pra visão (temporários)
         const cursors = this.input.keyboard.createCursorKeys();
-
+        // this.cameras.main.setZoom(0.6);
         const controlConfig = {
             camera: this.cameras.main,
             left: cursors.left,
@@ -37,8 +37,13 @@ export class GameScene extends Phaser.Scene {
         let worldPoint = this.input.activePointer;
 
         if (worldPoint.isDown && worldPoint.getDuration() < 1) {
-            const vect = this.map.worldToTile(worldPoint.x, worldPoint.y);
-            console.log(vect?.x, vect?.y);
+            const vect = this.map.getCurrentChunk({
+                x: worldPoint.worldX,
+                y: worldPoint.worldY - HEXSIZE / 4,
+            });
+            
+            console.log("tile", vect?.x, vect?.y);
+            // console.log(this.map.getCurrentChunk(this.cameras.main.worldView));
         }
     }
 }
