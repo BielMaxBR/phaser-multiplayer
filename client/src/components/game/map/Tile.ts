@@ -5,7 +5,7 @@ export default class Tile extends GameObjects.Sprite {
         super(scene, x, y, "tiles");
     }
 
-    protected preUpdate(time: number, delta: number): void {
+    protected preUpdate(): void {
         // console.log("a")
     }
 }

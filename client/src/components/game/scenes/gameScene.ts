@@ -33,8 +33,8 @@ export class GameScene extends Phaser.Scene {
     update(_time: number, delta: number): void {
         // controle de teste temporário
         this.controls.update(delta);
-
-        let worldPoint = this.input.activePointer;
+        this.map?.generateChunks(this.cameras.main.worldView);
+        const worldPoint = this.input.activePointer;
 
         if (worldPoint.isDown && worldPoint.getDuration() < 1) {
             const vect = this.map.getCurrentChunk({
@@ -43,7 +43,6 @@ export class GameScene extends Phaser.Scene {
             });
             
             console.log("tile", vect?.x, vect?.y);
-            // console.log(this.map.getCurrentChunk(this.cameras.main.worldView));
         }
     }
 }

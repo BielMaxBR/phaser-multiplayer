@@ -43,5 +43,5 @@ export default class ClientManager extends Plugins.ScenePlugin {
     //         this.channel.emit("message", "opa");
     //     });
     // }
-    onReady() {}
+    // onReady() {}
 }

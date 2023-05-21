@@ -1,7 +1,8 @@
-export const PRELOADER_SCENE: string = "Preloader";
-export const GAME_SCENE: string = "Game";
-export const GAME_WIDTH: number = 667;
-export const GAME_HEIGHT: number = 337;
+/* eslint-disable no-var */
+export const PRELOADER_SCENE = "Preloader";
+export const GAME_SCENE = "Game";
+export const GAME_WIDTH = 667;
+export const GAME_HEIGHT = 337;
 
 export var GAME_SCALE: number;
 

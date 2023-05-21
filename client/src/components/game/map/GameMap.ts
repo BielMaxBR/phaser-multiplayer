@@ -1,7 +1,13 @@
-import { Cameras, GameObjects, Math as PhaserMath, Scene, Types } from "phaser";
+import {
+    GameObjects,
+    Geom,
+    Math as PhaserMath,
+    Scene,
+    Types,
+} from "phaser";
 import Tile from "./Tile";
 import { div } from "../../../Utils/maths";
-import { HEXSIZE, MATHS } from "../../../Utils/constants";
+import { MATHS } from "../../../Utils/constants";
 import Chunk from "./Chunk";
 
 export default class GameMap extends GameObjects.Container {
@@ -11,7 +17,13 @@ export default class GameMap extends GameObjects.Container {
     shift = 3 * this.chunkRadius + 2;
     chunks: Chunk[] = [];
     currentChunk: Chunk;
-    viewDistanceInChunks: number = 0;
+    /*
+        o chunk terá uma lista com o dobro do tamanho da area de visão do player, ou talvez mais
+        ele vai adicionando os chunks visíveis no inicio da lista, e ordena que os mais distantes fiquem no final, para serem apagados depois
+        os que adiciono, eu ativo o loop fisico, e os que retiro eu paro
+        
+    */
+    viewDistanceInChunks = 0;
     constructor(scene: Scene) {
         super(scene);
         scene.add.existing(this);
@@ -52,18 +64,24 @@ export default class GameMap extends GameObjects.Container {
         this.add(tile);
     }
 
-    generateTile(x: number, y: number) {
-        // const newTile: Tile = new Tile(this.scene)
+    generateChunks(view: Geom.Rectangle) {
+        const center = { x: view.centerX, y: view.centerY };
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const centerChunk = this.getCurrentChunk(center);
+        
+        // if (this.currentChunk != centerChunk) {
+        //     this.currentChunk = centerChunk
+        // }
     }
 
-    // função copiada do código fonte do phaser
+    // funções a seguir copiadas do site https://www.redblobgames.com/grids/hexagons/#pixel-to-hex
     tileToWorld(tileX: number, tileY: number) {
-        let point = new PhaserMath.Vector2();
+        const point = new PhaserMath.Vector2();
 
-        var x = Math.round(
+        const x = Math.round(
             MATHS.HEXWITH * (MATHS.SQRT * tileX + MATHS.SQRT32 * tileY)
         );
-        var y = MATHS.HEXHEIGHT * (1.5 * tileY);
+        const y = MATHS.HEXHEIGHT * (1.5 * tileY);
 
         return point.set(x, y);
     }
@@ -71,26 +89,26 @@ export default class GameMap extends GameObjects.Container {
     worldToTile(vect: Types.Math.Vector2Like) {
         const worldX: number = vect.x;
         const worldY: number = vect.y;
-        let point = new PhaserMath.Vector2();
+        const point = new PhaserMath.Vector2();
 
-        var tileWidth = MATHS.HEXWITH;
-        var tileHeight = MATHS.HEXHEIGHT;
+        const tileWidth = MATHS.HEXWITH;
+        const tileHeight = MATHS.HEXHEIGHT;
 
-        var b0 = 0.5773502691896257; // Math.sqrt(3) / 3
-        var b1 = -0.3333333333333333; // -1 / 3
-        var b2 = 0.6666666666666666; // 2 / 3
+        const b0 = 0.5773502691896257; // Math.sqrt(3) / 3
+        const b1 = -0.3333333333333333; // -1 / 3
+        const b2 = 0.6666666666666666; // 2 / 3
 
-        var q = (b0 * worldX + b1 * worldY) / tileWidth;
-        var r = (b2 * worldY) / tileHeight;
-        var s = -q - r;
+        const q = (b0 * worldX + b1 * worldY) / tileWidth;
+        const r = (b2 * worldY) / tileHeight;
+        const s = -q - r;
 
-        var x = Math.round(q);
-        var y = Math.round(r);
-        var z = Math.round(s);
+        let x = Math.round(q);
+        let y = Math.round(r);
+        const z = Math.round(s);
 
-        var q_diff = Math.abs(x - q);
-        var r_diff = Math.abs(y - r);
-        var s_diff = Math.abs(z - s);
+        const q_diff = Math.abs(x - q);
+        const r_diff = Math.abs(y - r);
+        const s_diff = Math.abs(z - s);
 
         if (q_diff > r_diff && q_diff > s_diff) {
             x = -y - z;
@@ -122,10 +140,10 @@ export default class GameMap extends GameObjects.Container {
     }
 
     get_area(center: Types.Math.Vector2Like, range: number) {
-        var results = [];
-        for (var x = -range; x <= range; x++) {
+        const results = [];
+        for (let x = -range; x <= range; x++) {
             for (
-                var y = Math.max(-range, -x - range);
+                let y = Math.max(-range, -x - range);
                 y <= Math.min(+range, -x + range);
                 y++
             ) {
