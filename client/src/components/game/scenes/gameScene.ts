@@ -15,7 +15,7 @@ export class GameScene extends Phaser.Scene {
 
         // controles de teste pra visão (temporários)
         const cursors = this.input.keyboard.createCursorKeys();
-        // this.cameras.main.setZoom(0.6);
+        this.cameras.main.setZoom(0.2);
         const controlConfig = {
             camera: this.cameras.main,
             left: cursors.left,
@@ -31,9 +31,9 @@ export class GameScene extends Phaser.Scene {
         );
     }
     update(_time: number, delta: number): void {
+        this.map?.generateChunks(this.cameras.main.worldView); 
         // controle de teste temporário
         this.controls.update(delta);
-        this.map?.generateChunks(this.cameras.main.worldView);
         const worldPoint = this.input.activePointer;
 
         if (worldPoint.isDown && worldPoint.getDuration() < 1) {
