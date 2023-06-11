@@ -1,8 +1,10 @@
-import { GAME_SCENE, HEXSIZE } from "../../../Utils/constants";
-import GameMap from "../map/GameMap";
+import { GAME_SCENE } from "../../../Utils/constants";
+import ChunkManager from "../map/chunkManager";
+import TileManager from "../map/tileManager";
 
 export class GameScene extends Phaser.Scene {
-    map: GameMap;
+    tileManager: TileManager;
+    chunkManager: ChunkManager 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     constructor() {
         super({
@@ -11,7 +13,8 @@ export class GameScene extends Phaser.Scene {
     }
     create() {
         console.log("criando tilemap");
-        this.map = new GameMap(this);
+        this.tileManager = new TileManager(this);
+        this.chunkManager = new ChunkManager(this, this.tileManager);
 
         // controles de teste pra visão (temporários)
         const cursors = this.input.keyboard.createCursorKeys();
@@ -28,21 +31,12 @@ export class GameScene extends Phaser.Scene {
         };
         this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(
             controlConfig
-        );
+        ); 
+        this.chunkManager.update(this.cameras.main.worldView);
     }
     update(_time: number, delta: number): void {
-        this.map?.generateChunks(this.cameras.main.worldView); 
+        this.chunkManager.update(this.cameras.main.worldView);
         // controle de teste temporário
         this.controls.update(delta);
-        const worldPoint = this.input.activePointer;
-
-        if (worldPoint.isDown && worldPoint.getDuration() < 1) {
-            const vect = this.map.getCurrentChunk({
-                x: worldPoint.worldX,
-                y: worldPoint.worldY - HEXSIZE / 4,
-            });
-            
-            console.log("tile", vect?.x, vect?.y);
-        }
     }
 }
